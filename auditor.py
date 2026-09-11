@@ -5,10 +5,18 @@ while True:
 
     if stock == "quit":
         break
-
     elif not stock.isdigit():
         print("Please enter an integer.")
-        
-    elif stock < 0:
+        continue
+
+    stock = int(stock)
+
+    if stock < 0:
         print("Please enter a positive integer")
-        
+        continue
+
+    inventory += stock
+
+    if inventory > 500:
+        print("ALERT: Inventory has exceeded 500 units")
+        break
