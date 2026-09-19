@@ -35,6 +35,9 @@ while True:
 
     inventory = process_delivery(inventory, stock)
 
+    tax = calculate_tax(stock)
+    print("Tax:", tax)
+
     if inventory > 500:
         print("ALERT: Inventory has exceeded 500 units")
         break
