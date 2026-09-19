@@ -21,6 +21,7 @@ def calculate_tax(amount):
 
 inventory = 0
 failed_entries = 0
+deliveries_processed = 0
 
 while True:
     stock = get_valid_input()
@@ -37,6 +38,8 @@ while True:
 
     tax = calculate_tax(stock)
     print("Tax:", tax)
+
+    deliveries_processed += 1
 
     if inventory > 500:
         print("ALERT: Inventory has exceeded 500 units")
