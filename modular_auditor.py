@@ -29,7 +29,7 @@ while True:
         failed_entries += 1
         continue
 
-    inventory += stock
+    inventory = process_delivery(inventory, stock)
 
     if inventory > 500:
         print("ALERT: Inventory has exceeded 500 units")
