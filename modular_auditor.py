@@ -31,8 +31,7 @@ while True:
     stock = get_valid_input()
 
     if stock == "quit":
-        print("Total Units Processed", inventory)
-        print("Number of Failed/Rejected Entries:", failed_entries)
+        generate_report(deliveries_processed, failed_entries)
         break
     elif stock is None:
         failed_entries += 1
