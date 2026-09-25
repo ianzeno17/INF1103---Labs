@@ -1,3 +1,11 @@
+def load_inventory():
+    try:
+        with open("inventory.txt", "r") as file:
+            inventory = int(file.readline())
+            return inventory
+    except FileNotFoundError:
+        return 0
+
 def get_valid_input():
     stock = input("Enter stock quantity: ")
 
@@ -23,7 +31,7 @@ def generate_report(total_units, failed_attempts):
     print("Number of Failed/Rejected Entries:", failed_attempts)
 
 
-inventory = 0
+inventory = load_inventory()
 failed_entries = 0
 deliveries_processed = 0
 
