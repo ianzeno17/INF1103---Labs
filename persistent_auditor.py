@@ -1,65 +1,58 @@
 def load_inventory():
+    inventory = []
+
     try:
         with open("inventory.txt", "r") as file:
-            inventory = int(file.readline())
-            history = eval(file.readline())
-            return inventory, history
+            for line in file:
+                line = line.strip()
+
+                if line:
+                    parts = line.split(",")
+
+                    order_id = int(parts[0])
+                    product_name = parts[1]
+                    quantity = int(parts[2])
+
+                    inventory.append([order_id, product_name, quantity])
+
     except FileNotFoundError:
-        return 0, []
+        pass
 
-def save_inventory(inventory, transaction_history):
+    return inventory
+
+def save_inventory(inventory):
     with open("inventory.txt", "w") as file:
-        file.write(str(inventory) + "\n")
-        file.write(str(transaction_history))
-
-def get_valid_input():
-    stock = input("Enter stock quantity: ")
-
-    if stock == "quit":
-        return "quit"
-
-    if not stock.isdigit():
-        print("Please enter an integer.")
-        return None
-
-    return int(stock)
-
-def process_delivery(current_total, new_value):
-    new_total = current_total + new_value
-    return new_total
-
-def calculate_tax(amount):
-    tax = amount * 0.10
-    return tax
-
-def generate_report(total_units, failed_attempts):
-    print("Total Deliveries Processed:", total_units)
-    print("Number of Failed/Rejected Entries:", failed_attempts)
+        for i in inventory:
+            file.write(f"{i[0]}, {i[1]}, {i[2]}\n")
 
 
-inventory, transaction_history = load_inventory()
-failed_entries = 0
-deliveries_processed = 0
+inventory = load_inventory()
 
-while True:
-    stock = get_valid_input()
+print("Current Orders:")
+print()
 
-    if stock == "quit":
-        save_inventory(inventory, transaction_history)
-        generate_report(deliveries_processed, failed_entries)
-        break
-    elif stock is None:
-        failed_entries += 1
-        continue
+for i in inventory:
+    print(f"{i[0]}, {i[1]}, {i[2]}")
 
-    inventory = process_delivery(inventory, stock)
-    transaction_history.append(stock)
+print()
 
-    tax = calculate_tax(stock)
-    print("Tax:", tax)
+product_name = input("Enter Product Name: ")
+quantity = int(input("Enter Quantity: "))
 
-    deliveries_processed += 1
+if inventory:
+    new_order_id = inventory[-1][0] + 1
+else:
+    new_order_id = 1001
 
-    if inventory > 500:
-        print("ALERT: Inventory has exceeded 500 units")
-        break
+new_order = [new_order_id, product_name, quantity]
+
+inventory.append(new_order)
+
+print()
+print("New Order Added:")
+print(f"{new_order[0]}, {new_order[1]}, {new_order[2]}")
+
+save_inventory(inventory)
+
+print()
+print("Order successfully saved to inventory.txt")
