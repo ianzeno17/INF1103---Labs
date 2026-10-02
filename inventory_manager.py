@@ -15,7 +15,7 @@ inventory = [
         "stock": 40
     },
     {
-       "id": "P003",
+        "id": "P003",
         "name": "Keyboard",
         "price": 45.00,
         "stock": 25 
@@ -50,5 +50,21 @@ def add_product():
 
     print("Product added successfully!")
 
-add_product()
-display_all()
+def search_product():
+    print("Search Product")
+    search_id = input("Enter Product ID: ")
+
+    for i in inventory:
+        if i["id"] == search_id:
+            print("Product Found")
+            print("------------------------------------------------")
+            print(f"ID: {i['id']}")
+            print(f"Name: {i['name']}")
+            print(f"Price: ${i['price']:.2f}")
+            print(f"Stock: {i['stock']}")
+            print("------------------------------------------------")
+            return
+        
+    print("Product not found.")
+
+search_product()
