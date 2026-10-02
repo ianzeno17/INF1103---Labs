@@ -102,4 +102,12 @@ def load_inventory():
 
         inventory = []
 
-load_inventory()
+def save_inventory():
+    print("Saving inventory...")
+
+    with open("inventory.json", "w") as file:
+        json.dump(inventory, file, indent=4)
+
+    print("Inventory saved successfully to inventory.json")
+
+save_inventory()
