@@ -84,7 +84,22 @@ def update_stock():
             print("Stock updated successfully!")
             return
         
-    print("Product not found.")    
+    print("Product not found.")
 
-update_stock()
-display_all()
+def load_inventory():
+    global inventory
+
+    if os.path.exists("inventory.json"):
+        print("inventory.json found.")
+
+        with open("inventory.json", "r") as file:
+            inventory = json.load(file)
+
+        print("Inventory loaded successfully.")
+    else:
+        print("inventory.json not found.")
+        print("Starting with empty inventory.")
+
+        inventory = []
+
+load_inventory()
