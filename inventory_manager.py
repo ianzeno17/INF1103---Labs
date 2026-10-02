@@ -22,4 +22,15 @@ inventory = [
     }
 ]
 
-print(inventory)
+
+def display_all():
+    print("Current Inventory")
+    print("------------------------------------------------")
+
+    for i in inventory:
+        print(f"ID: {i['id']} | Name: {i['name']} | Price: ${i['price']:.2f} | Stock: {i['stock']}")
+
+    print("------------------------------------------------")
+
+
+display_all()
