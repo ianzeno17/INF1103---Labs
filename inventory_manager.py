@@ -32,5 +32,23 @@ def display_all():
 
     print("------------------------------------------------")
 
+def add_product():
+    print("Add New Product")
+    product_id = input("Product ID: ")
+    product_name = input("Product Name: ")
+    product_price = float(input("Price: "))
+    product_stock = int(input("Stock Quantity: "))
 
+    new_product = {
+        "id": product_id,
+        "name": product_name,
+        "price": product_price,
+        "stock": product_stock
+    }
+
+    inventory.append(new_product)
+
+    print("Product added successfully!")
+
+add_product()
 display_all()
