@@ -241,14 +241,18 @@ def calculate_shipping():
 
 
 def display_menu():
-    print("----------- MENU -----------")
+    print("\n----------- MENU -----------")
     print("1. Display All Products")
     print("2. Add Product")
     print("3. Update Stock")
     print("4. Search Product")
-    print("5. Save Inventory")
-    print("6. Exit")
+    print("5. Calculate Shipping Cost")
+    print("6. Save Inventory")
+    print("7. Exit")
     print("----------------------------")
+
+
+load_inventory()
 
 
 load_inventory()
@@ -276,9 +280,12 @@ while True:
         search_product()
 
     elif option == 5:
-        save_inventory()
+        calculate_shipping()
 
     elif option == 6:
+        save_inventory()
+
+    elif option == 7:
         print("Saving inventory before exit...")
         save_inventory()
         print("Thank you for using Inventory Management System.")
