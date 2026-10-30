@@ -220,6 +220,26 @@ def search_product():
         print("Product not found.")
 
 
+def calculate_shipping():
+    print("Calculate Shipping Cost")
+
+    product_id = input("Enter Product ID: ").strip()
+    product = inventory.search_product(product_id)
+
+    if product is None:
+        print("Product not found.")
+        return
+
+    if isinstance(product, CanBeShipped):
+        shipping_cost = product.calculate_shipping_cost()
+
+        print(f"Product: {product.get_name()}")
+        print(f"Shipping Cost: ${shipping_cost:.2f}")
+
+    else:
+        print("Digital products do not require shipping.")
+
+
 def display_menu():
     print("----------- MENU -----------")
     print("1. Display All Products")
