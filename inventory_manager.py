@@ -1,9 +1,11 @@
-
 import json
 import os
 
 from product import Product
 from inventory import Inventory
+from physical_product import PhysicalProduct
+from digital_product import DigitalProduct
+from can_be_shipped import CanBeShipped
 
 
 print("========================================")
@@ -21,12 +23,29 @@ def load_inventory():
             data = json.load(file)
 
         for item in data:
-            product = Product(
-                item["id"],
-                item["name"],
-                item["price"],
-                item["stock"]
-            )
+            product_type = item.get("type", "physical")
+
+            if product_type == "physical":
+                product = PhysicalProduct(
+                    item["id"],
+                    item["name"],
+                    item["price"],
+                    item["stock"],
+                    item.get("weight", 0.0)
+                )
+
+            elif product_type == "digital":
+                product = DigitalProduct(
+                    item["id"],
+                    item["name"],
+                    item["price"],
+                    item["stock"],
+                    item.get("download_size", 0.0)
+                )
+
+            else:
+                print(f"Unknown product type: {product_type}")
+                continue
 
             inventory.add_product(product)
 
@@ -37,13 +56,19 @@ def load_inventory():
         print("Starting with sample inventory.")
 
         inventory.add_product(
-            Product("P001", "Laptop", 1200.00, 15)
+            PhysicalProduct("P001", "Laptop", 1200.00, 15, 2.5)
         )
+
         inventory.add_product(
-            Product("P002", "Mouse", 25.50, 40)
+            PhysicalProduct("P002", "Mouse", 25.50, 40, 0.1)
         )
+
         inventory.add_product(
-            Product("P003", "Keyboard", 45.00, 25)
+            PhysicalProduct("P003", "Keyboard", 45.00, 25, 0.8)
+        )
+
+        inventory.add_product(
+            DigitalProduct("P004", "Antivirus Software", 59.90, 100, 250)
         )
 
 
