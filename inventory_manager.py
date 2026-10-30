@@ -87,9 +87,27 @@ def save_inventory():
 
 
 def add_product():
-    print("Add New Product")
+    print("\nAdd New Product")
+
+    print("1. Physical Product")
+    print("2. Digital Product")
+
+    try:
+        product_type = int(input("Choose product type: "))
+
+        if product_type not in [1, 2]:
+            print("Invalid product type.")
+            return
+
+    except ValueError:
+        print("Please enter a valid option.")
+        return
 
     product_id = input("Product ID: ").strip()
+
+    if not product_id:
+        print("Product ID cannot be empty.")
+        return
 
     if inventory.search_product(product_id) is not None:
         print("Product ID already exists.")
@@ -109,16 +127,39 @@ def add_product():
             print("Price and stock cannot be negative.")
             return
 
-    except ValueError:
-        print("Please enter a valid price and stock quantity.")
-        return
+        if product_type == 1:
+            weight = float(input("Weight (kg): "))
 
-    product = Product(
-        product_id,
-        product_name,
-        product_price,
-        product_stock
-    )
+            if weight < 0:
+                print("Weight cannot be negative.")
+                return
+
+            product = PhysicalProduct(
+                product_id,
+                product_name,
+                product_price,
+                product_stock,
+                weight
+            )
+
+        else:
+            download_size = float(input("Download Size (MB): "))
+
+            if download_size < 0:
+                print("Download size cannot be negative.")
+                return
+
+            product = DigitalProduct(
+                product_id,
+                product_name,
+                product_price,
+                product_stock,
+                download_size
+            )
+
+    except ValueError:
+        print("Please enter valid numerical values.")
+        return
 
     inventory.add_product(product)
 
@@ -162,9 +203,18 @@ def search_product():
 
     if product is not None:
         print("Product Found")
-        print("------------------------------------------------")
+        print("----------------------------------------")
+
         product.display_information()
-        print("------------------------------------------------")
+        print(product.get_fulfilment_info())
+
+        if isinstance(product, CanBeShipped):
+            print(
+                f"Shipping Cost: "
+                f"${product.calculate_shipping_cost():.2f}"
+            )
+
+        print("----------------------------------------")
 
     else:
         print("Product not found.")
