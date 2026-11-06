@@ -47,13 +47,14 @@ class Product(ABC):
 
     def get_stock(self):
         return self.__stock
-
-    def to_dict(self):
+    
+    def to_dict(self) -> dict:
         return {
             "id": self.__product_id,
             "name": self.__name,
             "price": self.__price,
             "stock": self.__stock,
+            "supplier": self.__supplier.to_dict()
         }
 
     def get_supplier(self) -> Supplier:
