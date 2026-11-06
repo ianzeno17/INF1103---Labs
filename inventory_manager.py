@@ -6,6 +6,7 @@ from inventory import Inventory
 from physical_product import PhysicalProduct
 from digital_product import DigitalProduct
 from can_be_shipped import CanBeShipped
+from supplier import Supplier
 
 
 print("========================================")
@@ -15,7 +16,10 @@ print("========================================")
 inventory = Inventory()
 
 
-def load_inventory():
+def create_default_supplier() -> Supplier:
+    return Supplier("S001", "Default Supplier", "N/A")
+
+def load_inventory() -> None:
     if os.path.exists("inventory.json"):
         print("inventory.json found.")
 
@@ -23,6 +27,17 @@ def load_inventory():
             data = json.load(file)
 
         for item in data:
+            supplier_data = item.get("supplier")
+
+            if supplier_data:
+                supplier = Supplier(
+                    supplier_data["supplier_id"],
+                    supplier_data["name"],
+                    supplier_data["contact"]
+                )
+            else:
+                supplier = create_default_supplier()
+
             product_type = item.get("type", "physical")
 
             if product_type == "physical":
@@ -31,7 +46,8 @@ def load_inventory():
                     item["name"],
                     item["price"],
                     item["stock"],
-                    item.get("weight", 0.0)
+                    item.get("weight", 0.0),
+                    supplier
                 )
 
             elif product_type == "digital":
@@ -40,7 +56,8 @@ def load_inventory():
                     item["name"],
                     item["price"],
                     item["stock"],
-                    item.get("download_size", 0.0)
+                    item.get("download_size", 0.0),
+                    supplier
                 )
 
             else:
@@ -55,30 +72,48 @@ def load_inventory():
         print("inventory.json not found.")
         print("Starting with sample inventory.")
 
-        inventory.add_product(
-            PhysicalProduct("P001", "Laptop", 1200.00, 15, 2.5)
+        supplier = Supplier(
+            "S001",
+            "Default Supplier",
+            "N/A"
         )
 
         inventory.add_product(
-            PhysicalProduct("P002", "Mouse", 25.50, 40, 0.1)
+            PhysicalProduct(
+                "P001", "Laptop", 1200.00, 15, 2.5, supplier
+            )
         )
 
         inventory.add_product(
-            PhysicalProduct("P003", "Keyboard", 45.00, 25, 0.8)
+            PhysicalProduct(
+                "P002", "Mouse", 25.50, 40, 0.1, supplier
+            )
         )
 
         inventory.add_product(
-            DigitalProduct("P004", "Antivirus Software", 59.90, 100, 250)
+            PhysicalProduct(
+                "P003", "Keyboard", 45.00, 25, 0.8, supplier
+            )
+        )
+
+        inventory.add_product(
+            DigitalProduct(
+                "P004", "Antivirus Software", 59.90, 100, 250, supplier
+            )
         )
 
 
-def save_inventory():
+def save_inventory() -> None:
     print("Saving inventory...")
 
-    data = [
-        product.to_dict()
-        for product in inventory.get_products()
-    ]
+    data = []
+
+    for product in inventory.get_products():
+        product_data = product.to_dict()
+
+        product_data["supplier"] = product.get_supplier().to_dict()
+
+        data.append(product_data)
 
     with open("inventory.json", "w") as file:
         json.dump(data, file, indent=4)
@@ -86,7 +121,7 @@ def save_inventory():
     print("Inventory saved successfully to inventory.json")
 
 
-def add_product():
+def add_product() -> None:
     print("\nAdd New Product")
 
     print("1. Physical Product")
@@ -126,6 +161,22 @@ def add_product():
         if product_price < 0 or product_stock < 0:
             print("Price and stock cannot be negative.")
             return
+        
+        print("\nEnter Supplier Details")
+
+        supplier_id = input("Supplier ID: ").strip()
+        supplier_name = input("Supplier Name: ").strip()
+        supplier_contact = input("Supplier Contact: ").strip()
+
+        if not supplier_id or not supplier_name or not supplier_contact:
+            print("Supplier details cannot be empty.")
+            return
+
+        supplier = Supplier(
+            supplier_id,
+            supplier_name,
+            supplier_contact
+        )
 
         if product_type == 1:
             weight = float(input("Weight (kg): "))
@@ -139,7 +190,8 @@ def add_product():
                 product_name,
                 product_price,
                 product_stock,
-                weight
+                weight,
+                supplier
             )
 
         else:
@@ -154,7 +206,8 @@ def add_product():
                 product_name,
                 product_price,
                 product_stock,
-                download_size
+                download_size,
+                supplier
             )
 
     except ValueError:
@@ -166,7 +219,7 @@ def add_product():
     print("Product added successfully!")
 
 
-def update_stock():
+def update_stock() -> None:
     print("Update Stock")
 
     product_id = input("Enter Product ID: ").strip()
@@ -195,7 +248,7 @@ def update_stock():
         print("Product not found.")
 
 
-def search_product():
+def search_product() -> None:
     print("Search Product")
 
     product_id = input("Enter Product ID: ").strip()
@@ -207,6 +260,7 @@ def search_product():
 
         product.display_information()
         print(product.get_fulfilment_info())
+        print(f"Supplier: {product.get_supplier().get_name()}")
 
         if isinstance(product, CanBeShipped):
             print(
@@ -220,7 +274,7 @@ def search_product():
         print("Product not found.")
 
 
-def calculate_shipping():
+def calculate_shipping() -> None:
     print("Calculate Shipping Cost")
 
     product_id = input("Enter Product ID: ").strip()
@@ -240,7 +294,7 @@ def calculate_shipping():
         print("Digital products do not require shipping.")
 
 
-def display_menu():
+def display_menu() -> None:
     print("\n----------- MENU -----------")
     print("1. Display All Products")
     print("2. Add Product")
@@ -250,9 +304,6 @@ def display_menu():
     print("6. Save Inventory")
     print("7. Exit")
     print("----------------------------")
-
-
-load_inventory()
 
 
 load_inventory()
