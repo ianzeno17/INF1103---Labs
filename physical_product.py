@@ -23,3 +23,19 @@ class PhysicalProduct(Product, CanBeShipped):
         )
 
         self.__weight: float = weight
+        
+    def display_information(self):
+        super().display_information()
+        print(f"Weight: {self.__weight} kg")
+        
+    def get_fulfilment_info(self):
+        return "This product requires physical shipping."
+    
+    def calculate_shipping_cost(self):
+        return 5.00 + (self.__weight * 1.50)
+
+    def to_dict(self):
+        data = super().to_dict()
+        data["type"] = "physical"
+        data["weight"] = self.__weight
+        return data
