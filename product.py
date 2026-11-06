@@ -1,12 +1,21 @@
 from abc import ABC, abstractmethod
+from supplier import Supplier
 
 
 class Product(ABC):
-    def __init__(self, product_id, name, price, stock):
-        self.__product_id = product_id
-        self.__name = name
-        self.__price = price
-        self.__stock = stock
+    def __init__(
+        self,
+        product_id: str,
+        name: str,
+        price: float,
+        stock: int,
+        supplier: Supplier
+    ) -> None:
+        self.__product_id: str = product_id
+        self.__name: str = name
+        self.__price: float = price
+        self.__stock: int = stock
+        self.__supplier: Supplier = supplier
 
     def update_stock(self, quantity):
         if quantity < 0:
@@ -46,3 +55,6 @@ class Product(ABC):
             "price": self.__price,
             "stock": self.__stock,
         }
+
+    def get_supplier(self) -> Supplier:
+        return self.__supplier
